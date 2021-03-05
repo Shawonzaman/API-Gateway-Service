@@ -1,0 +1,61 @@
+server:
+  port: 8010    #port number
+
+#eureka:
+#  instance:
+#    leaseRenewalIntervalInSeconds: 5
+#    leaseExpirationDurationInSeconds: 2
+#    health-check-url-path: /actuator/health
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka/
+#    healthcheck:
+#      enabled: true
+#    lease:
+#      duration: 5
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+spring:
+  boot:
+    admin:
+      client:
+        url: http://localhost:8090
+  application:
+    name: second-service
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      statusBreak:
+        register-health-indicator: true
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        waitDurationInOpenState: 5s
+        slidingWindowType: COUNT_BASED
+
+management:
+    endpoints:
+      web:
+        exposure:
+          include: '*'
+    endpoint:
+      health:
+        show-details: always
+
+
+logging:
+  level:
+    root: INFO
+  file:
+    name: "D:\\Microservice\\Planning project demo\\log\\second_service.log"
+
+
